@@ -2,8 +2,7 @@
 *
 !src
 !src/*
-!src/evaluation/*
-!src/low_level_features/*
 !.gitignore
 !README.md
 !.gitignore.example
+!requirements.txt
