@@ -53,7 +53,7 @@ def stitch_tiles(compressed_tiles, tile_size, grid_shape):
     # merge gambar dari tahap awal jadi satu-kesatuan
     tile_h, tile_w = tile_size
     grid_rows, grid_cols = grid_shape
-    (full_h,) = tile_h * grid_rows
+    full_h = tile_h * grid_rows
     full_w = tile_w * grid_cols
 
     # Create an empty image large enough to contain every tile.
@@ -195,3 +195,35 @@ def piperun(image_path):
     print(f"total ukuran gambar setelah kompres: {total_size_kb: .2f} KB")
 
     return output_img
+
+
+def sample_test_piperun():
+    """Run the compression pipeline with a temporary dummy image."""
+    import os
+    import tempfile
+
+    dummy_image = np.random.randint(
+        0,
+        256,
+        size=(128, 128, 3),
+        dtype=np.uint8,
+    )
+
+    with tempfile.NamedTemporaryFile(suffix=".jpg", delete=False) as image_file:
+        image_path = image_file.name
+
+    try:
+        if not cv2.imwrite(image_path, dummy_image):
+            raise AssertionError("Failed to write the dummy image.")
+
+        result = piperun(image_path)
+
+        assert result.shape == dummy_image.shape
+        assert result.dtype == np.uint8
+        return result
+    finally:
+        os.remove(image_path)
+
+
+if __name__ == "__main__":
+    sample_test_piperun()
